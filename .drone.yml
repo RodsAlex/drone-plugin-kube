@@ -12,6 +12,7 @@ steps:
         path: /var/run
     commands:
       - sleep 10
+      - ls -la
       - docker login  rg.fr-par.scw.cloud/nevercamprepo -u nologin  -p $SCALEWAY_TOKEN
       - docker build -t rg.fr-par.scw.cloud/nevercamprepo/drone-plugin-kube:latest .
       - docker push rg.fr-par.scw.cloud/nevercamprepo/drone-plugin-kube:latest
