@@ -4,6 +4,13 @@ name: default
 
 steps:
 
+  - name: backend
+    image: golang
+    commands:
+      - go get
+      - go build
+      - go test
+
   - name: build
     image: docker:dind
     privileged: true
