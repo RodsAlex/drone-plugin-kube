@@ -1,0 +1,62 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+
+  - name: build
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+    commands:
+      - sleep 5
+      - docker login  rg.fr-par.scw.cloud/nevercamprepo -u nologin  -p $SCALEWAY_TOKEN
+      - docker build -t rg.fr-par.scw.cloud/nevercamprepo/nc-api:latest .
+      - docker push rg.fr-par.scw.cloud/nevercamprepo/nc-api:latest
+    environment:
+      SCALEWAY_TOKEN:
+        from_secret: SCALEWAY_TOKEN
+
+
+  - name: discord notification success
+    image: appleboy/drone-discord
+    when:
+      status:
+        - success
+    settings:
+      webhook_id:
+        from_secret: webhook_id
+      webhook_token:
+        from_secret: webhook_token
+      message: " :green_square: :green_square: :green_square: build {{build.number}} succeeded. Good job. New drone kube has been deployed git_url: https://github.com/RodsAlex/drone-plugin-kube ci_url: https://drone.nevercamp.com/RodsAlex/drone-plugin-kube/{{build.number}} :green_square: :green_square: :green_square:"
+
+
+  - name: discord notification fail
+    image: appleboy/drone-discord
+    when:
+      status:
+        - failure
+    settings:
+      webhook_id:
+        from_secret: webhook_id
+      webhook_token:
+        from_secret: webhook_token
+      message: ":red_square: :red_square: :red_square: build {{build.number}} failed. Fix me please. check log on  https://drone.nevercamp.com/RodsAlex/drone-plugin-kube/{{build.number}} :red_square: :red_square: :red_square:"
+
+
+
+#trigger CI
+
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+volumes:
+  - name: dockersock
+    temp: {}

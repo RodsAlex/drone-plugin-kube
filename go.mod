@@ -1,6 +1,6 @@
-module github.com/polygon-io/drone-plugin-kube
+module drone-plugin-kube
 
-go 1.13
+go 1.14
 
 require (
 	github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible

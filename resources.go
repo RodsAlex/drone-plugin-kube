@@ -1,22 +1,26 @@
 package main
 
 import (
-	"errors"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"path/filepath"
-	"strings"
-	"time"
+  "errors"
+  "fmt"
+  "io/ioutil"
+  batchv1BetaV1 "k8s.io/api/batch/v1beta1"
+  "log"
+  "net/http"
+  "path/filepath"
+  "strings"
+  "time"
 
-	appV1 "k8s.io/api/apps/v1"
-	coreV1 "k8s.io/api/core/v1"
-	v1BetaV1 "k8s.io/api/extensions/v1beta1"
-	kubeErrors "k8s.io/apimachinery/pkg/api/errors"
-	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
+  appV1 "k8s.io/api/apps/v1"
+  coreV1 "k8s.io/api/core/v1"
+  v1BetaV1 "k8s.io/api/extensions/v1beta1"
+  kubeErrors "k8s.io/apimachinery/pkg/api/errors"
+  metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+  "k8s.io/client-go/kubernetes"
 )
+
+
+
 
 // CreateOrUpdateDeployment -- Checks if deployment already exists, updates if it does, creates if it doesn't
 func CreateOrUpdateDeployment(clientset *kubernetes.Clientset, namespace string, deployment *appV1.Deployment) error {
@@ -189,4 +193,34 @@ func getIngress(clientset *kubernetes.Clientset, namespace string, name string) 
 	}
 
 	return ingress, true, nil
+}
+
+
+
+func ApplyCronjob(clientset *kubernetes.Clientset, namespace string, cronjob *batchv1BetaV1.CronJob) error {
+  _, exists, err := getCronjob(clientset, namespace, cronjob.Name)
+  if err != nil {
+    return err
+  }
+
+  if !exists {
+    _, err = clientset.BatchV1beta1().CronJobs(namespace).Create(cronjob)
+    return err
+  }
+
+  _, err = clientset.BatchV1beta1().CronJobs(namespace).Update(cronjob)
+  return err
+}
+
+func getCronjob(clientset *kubernetes.Clientset, namespace string, name string) (*batchv1BetaV1.CronJob, bool, error) {
+  cronjob, err := clientset.BatchV1beta1().CronJobs(namespace).Get(name, metaV1.GetOptions{})
+  if err != nil {
+    statusError, ok := err.(*kubeErrors.StatusError)
+    if ok && statusError.Status().Code == http.StatusNotFound {
+      return nil, false, nil
+    }
+    return nil, false, err
+  }
+
+  return cronjob, true, nil
 }
