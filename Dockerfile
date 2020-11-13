@@ -6,7 +6,13 @@ RUN update-ca-certificates
 
 COPY ./ /src
 
+RUN ls
+
+
 WORKDIR /src
+
+RUN ls
+
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main .
 
