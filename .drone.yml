@@ -11,10 +11,10 @@ steps:
       - name: dockersock
         path: /var/run
     commands:
-      - sleep 5
+      - sleep 10
       - docker login  rg.fr-par.scw.cloud/nevercamprepo -u nologin  -p $SCALEWAY_TOKEN
-      - docker build -t rg.fr-par.scw.cloud/nevercamprepo/nc-api:latest .
-      - docker push rg.fr-par.scw.cloud/nevercamprepo/nc-api:latest
+      - docker build -t rg.fr-par.scw.cloud/nevercamprepo/drone-plugin-kube:latest .
+      - docker push rg.fr-par.scw.cloud/nevercamprepo/drone-plugin-kube:latest
     environment:
       SCALEWAY_TOKEN:
         from_secret: SCALEWAY_TOKEN
