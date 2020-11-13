@@ -8,7 +8,7 @@ RUN update-ca-certificates
 COPY ./ /src
 
 WORKDIR /src
-
+RUN ls -la
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main .
 
 FROM scratch
