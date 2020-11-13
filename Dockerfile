@@ -5,10 +5,10 @@ RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 
 RUN update-ca-certificates
 
-COPY ./ /src
-RUN  ls -la /src
 WORKDIR /src
-RUN ls -la
+
+COPY . .
+
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main .
 
 FROM scratch
