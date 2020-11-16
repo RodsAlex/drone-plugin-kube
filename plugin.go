@@ -10,9 +10,9 @@ import (
 
 	"github.com/aymerick/raymond"
 	appV1 "k8s.io/api/apps/v1"
+	batchv1BetaV1 "k8s.io/api/batch/v1beta1"
 	coreV1 "k8s.io/api/core/v1"
-  v1BetaV1 "k8s.io/api/extensions/v1beta1"
-  batchv1BetaV1 "k8s.io/api/batch/v1beta1"
+	v1BetaV1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/client-go/kubernetes/scheme"
 )
 
@@ -122,24 +122,20 @@ func (p Plugin) Exec() error {
 		}
 
 		log.Print("Resource type: Service")
-    err = ApplyService(clientset, p.KubeConfig.Namespace, o)
+		err = ApplyService(clientset, p.KubeConfig.Namespace, o)
 
-
-  case *batchv1BetaV1.CronJob :
+	case *batchv1BetaV1.CronJob:
 		if p.KubeConfig.Namespace == "" {
 			p.KubeConfig.Namespace = o.Namespace
-    }
+		}
 
-		log.Print("Resource type: Ingress")
+		log.Print("Resource type: Cronjob")
 		err = ApplyCronjob(clientset, p.KubeConfig.Namespace, o)
 
-
-	case *v1BetaV1.Ingress :
+	case *v1BetaV1.Ingress:
 		if p.KubeConfig.Namespace == "" {
 			p.KubeConfig.Namespace = o.Namespace
-    }
-
-
+		}
 
 		log.Print("Resource type: Ingress")
 		err = ApplyIngress(clientset, p.KubeConfig.Namespace, o)
