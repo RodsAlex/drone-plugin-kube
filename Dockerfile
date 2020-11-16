@@ -11,8 +11,7 @@ COPY . .
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main .
 
-FROM docker:stable
-
+FROM scratch
 
 COPY --from=builder /src/main /main
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
