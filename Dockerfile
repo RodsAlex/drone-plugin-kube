@@ -11,7 +11,10 @@ COPY . .
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main .
 
-FROM scratch
+FROM docker:stable
+
+RUN apk add --update --no-cache ca-certificates bash build-base curl python-dev py-pip libevent-dev libffi-dev openssl-dev \
+    && pip install docker-compose
 
 COPY --from=builder /src/main /main
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
