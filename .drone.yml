@@ -19,7 +19,7 @@ steps:
     commands:
       - sleep 10
       - ls -la
-      - docker login  rodsalex -u RodsAlex  -p $ALEX_TOKEN
+      - docker login  docker.io -u "rodsalex"  -p $ALEX_TOKEN
       - docker build -t rodsalex/drone-plugin-kube:latest .
       - docker push rodsalex/drone-plugin-kube:latest
     environment:
