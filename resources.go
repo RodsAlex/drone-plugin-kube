@@ -31,6 +31,7 @@ func CreateOrUpdateDeployment(clientset *kubernetes.Clientset, namespace string,
 	if deploymentExists {
 		log.Printf("📦 Found existing deployment '%s'. Updating.", deployment.Name)
 		_ = clientset.AppsV1().Deployments(namespace).Delete(deployment.Name,nil)
+		time.Sleep(2 *time.Second)
 		_, err = clientset.AppsV1().Deployments(namespace).Update(deployment)
 
 		return err
