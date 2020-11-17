@@ -210,7 +210,8 @@ func ApplyCronjob(clientset *kubernetes.Clientset, namespace string, cronjob *ba
     _, err = clientset.BatchV1beta1().CronJobs(namespace).Create(cronjob)
     return err
   }
-
+  _ = clientset.BatchV1beta1().CronJobs(namespace).Delete(cronjob.Name, nil)
+  time.Sleep(2 * time.Second)
   _, err = clientset.BatchV1beta1().CronJobs(namespace).Update(cronjob)
   return err
 }
