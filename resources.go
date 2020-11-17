@@ -32,7 +32,7 @@ func CreateOrUpdateDeployment(clientset *kubernetes.Clientset, namespace string,
 		log.Printf("📦 Found existing deployment '%s'. Updating.", deployment.Name)
 		_ = clientset.AppsV1().Deployments(namespace).Delete(deployment.Name,nil)
 		time.Sleep(2 *time.Second)
-		_, err = clientset.AppsV1().Deployments(namespace).Update(deployment)
+		_, err = clientset.AppsV1().Deployments(namespace).Create(deployment)
 
 		return err
 	}
@@ -212,7 +212,7 @@ func ApplyCronjob(clientset *kubernetes.Clientset, namespace string, cronjob *ba
   }
   _ = clientset.BatchV1beta1().CronJobs(namespace).Delete(cronjob.Name, nil)
   time.Sleep(2 * time.Second)
-  _, err = clientset.BatchV1beta1().CronJobs(namespace).Update(cronjob)
+  _, err = clientset.BatchV1beta1().CronJobs(namespace).Create(cronjob)
   return err
 }
 
