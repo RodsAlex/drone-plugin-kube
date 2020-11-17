@@ -20,8 +20,8 @@ steps:
       - sleep 10
       - ls -la
       - docker login  docker.io -u "rodsalex"  -p $ALEX_TOKEN
-      - docker build -t rodsalex/drone-plugin-kube:0.0.1 .
-      - docker push rodsalex/drone-plugin-kube:0.0.1
+      - docker build -t rodsalex/drone-plugin-kube:0.0.2 .
+      - docker push rodsalex/drone-plugin-kube:0.0.2
     environment:
       ALEX_TOKEN:
         from_secret: ALEX_TOKEN
